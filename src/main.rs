@@ -20,6 +20,7 @@ fn main() {
     app.add_plugin(bevy_webgl2::WebGL2Plugin);
 
     app.add_plugin(game_camera::GameCameraPlugin);
+    app.add_plugin(map::MapPlugin);
     app.add_plugin(player::PlayerPlugin);
 
     app.run();

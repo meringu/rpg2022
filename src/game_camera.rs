@@ -1,9 +1,7 @@
 use bevy::prelude::*;
 
 #[derive(Default)]
-pub struct GameCamera {
-    pub position: Vec3,
-}
+pub struct GameCamera;
 
 pub struct GameCameraPlugin;
 
