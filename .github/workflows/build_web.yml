@@ -6,8 +6,5 @@ jobs:
     steps:
       - uses: actions/checkout@v2
       - run: rustup show
-      - uses: actions-rs/cargo@v1
-        with:
-          command: install
-          args: trunk
+      - run: wget -qO- https://github.com/thedodd/trunk/releases/download/0.14.0/trunk-x86_64-unknown-linux-gnu.tar.gz | tar -xzf-
       - run: trunk build --release
