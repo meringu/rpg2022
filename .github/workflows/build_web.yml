@@ -1,0 +1,13 @@
+on: [push, pull_request]
+name: Build web
+jobs:
+  clippy_check:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v2
+      - run: rustup show
+      - uses: actions-rs/cargo@v1
+        with:
+          command: install
+          args: trunk
+      - run: trunk build --release
