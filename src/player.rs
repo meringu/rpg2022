@@ -6,8 +6,8 @@ const SPRITE_HEIGHT: f32 = 23.0;
 const SPRITE_ZOOM: f32 = 4.0;
 
 const SPRITE_FRAMES: u32 = 4;
-const SPRITE_INDEX_DOWN: u32 = 0 * SPRITE_FRAMES;
-const SPRITE_INDEX_LEFT: u32 = 1 * SPRITE_FRAMES;
+const SPRITE_INDEX_DOWN: u32 = 0;
+const SPRITE_INDEX_LEFT: u32 = SPRITE_FRAMES;
 const SPRITE_INDEX_RIGHT: u32 = 2 * SPRITE_FRAMES;
 const SPRITE_INDEX_UP: u32 = 3 * SPRITE_FRAMES;
 
@@ -106,8 +106,9 @@ fn animate_sprite_system(
         }
 
         // move player
-        player.position = player.position
-            + player.direction * WALKING_SPEED * time.delta().as_nanos() as f32 / 1_000_000_000.0;
+        let delta =
+            player.direction * WALKING_SPEED * time.delta().as_nanos() as f32 / 1_000_000_000.0;
+        player.position += delta;
 
         // move camera to follow player
         for mut camera in game_camera_query.iter_mut() {
@@ -149,8 +150,6 @@ fn setup(
         1,
     );
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
-
-    commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     commands
         .spawn_bundle(SpriteSheetBundle {
