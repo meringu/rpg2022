@@ -5,6 +5,7 @@ on:
 name: Publish web
 jobs:
   publish_web:
+    concurrency: publish_web
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
