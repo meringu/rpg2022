@@ -9,7 +9,7 @@ Check it out at https://rpg.henare.dev
 ### Prerequisites
 
 - Rust - https://rustup.rs/
-- Trunk - https://trunkrs.dev/
+- Trunk - https://trunkrs.dev/ (only needed for web)
 
 ### Running
 

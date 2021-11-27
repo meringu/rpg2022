@@ -1,8 +1,8 @@
 use bevy::prelude::*;
 use rand::Rng;
 
-pub const MAP_WIDTH: usize = 12;
-pub const MAP_HEIGHT: usize = 8;
+pub const MAP_WIDTH: usize = 32;
+pub const MAP_HEIGHT: usize = 32;
 pub const SPRITE_SIZE: f32 = 32.0;
 
 const SPRITE_GRASS: &str = "textures/tiles/grass.png";
