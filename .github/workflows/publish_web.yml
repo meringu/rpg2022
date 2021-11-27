@@ -4,7 +4,7 @@ on:
       - main
 name: Publish web
 jobs:
-  build_web:
+  publish_web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
