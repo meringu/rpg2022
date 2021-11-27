@@ -1,7 +1,7 @@
 on: [push, pull_request]
 name: Build native
 jobs:
-  clippy_check:
+  build_native:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2

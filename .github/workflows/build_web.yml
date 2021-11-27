@@ -1,7 +1,7 @@
 on: [push, pull_request]
 name: Build web
 jobs:
-  clippy_check:
+  build_web:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
