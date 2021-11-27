@@ -2376,7 +2376,7 @@ dependencies = [
 ]
 
 [[package]]
-name = "rpg2022"
+name = "rpg"
 version = "0.1.0"
 dependencies = [
  "bevy",

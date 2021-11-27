@@ -1,13 +1,23 @@
+use crate::game_camera::GameCamera;
 use bevy::prelude::*;
 
-const SPRITE_INDEX_DOWN: u32 = 0;
-const SPRITE_INDEX_LEFT: u32 = 4;
-const SPRITE_INDEX_RIGHT: u32 = 8;
-const SPRITE_INDEX_UP: u32 = 12;
+const SPRITE_WIDTH: f32 = 16.0;
+const SPRITE_HEIGHT: f32 = 23.0;
+const SPRITE_ZOOM: f32 = 4.0;
+
+const SPRITE_FRAMES: u32 = 4;
+const SPRITE_INDEX_DOWN: u32 = 0 * SPRITE_FRAMES;
+const SPRITE_INDEX_LEFT: u32 = 1 * SPRITE_FRAMES;
+const SPRITE_INDEX_RIGHT: u32 = 2 * SPRITE_FRAMES;
+const SPRITE_INDEX_UP: u32 = 3 * SPRITE_FRAMES;
+
+const WALKING_SPEED: f32 = 150.0;
+const STEP_DURATION_SECONDS: f32 = 0.15;
 
 #[derive(Default)]
 struct Player {
-    velocity: (i32, i32),
+    position: Vec3,
+    direction: Vec3,
     base_sprite_offset: u32,
     step_sprite_offset: u32,
 }
@@ -19,13 +29,13 @@ impl Player {
     }
 
     fn is_moving(&self) -> bool {
-        self.velocity != (0, 0)
+        self.direction != Vec3::ZERO
     }
 
     // Takes one step through the sprite sheet
     fn step(&mut self) {
         self.step_sprite_offset = if self.is_moving() {
-            (self.step_sprite_offset + 1) % 4
+            (self.step_sprite_offset + 1) % SPRITE_FRAMES
         } else {
             0
         }
@@ -44,16 +54,16 @@ impl Plugin for PlayerPlugin {
 
 fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&mut Player>) {
     for mut player in query.iter_mut() {
-        player.velocity = (0, 0);
+        player.direction = Vec3::ZERO;
 
         // moving horizonally
         if keyboard_input.pressed(KeyCode::A) ^ keyboard_input.pressed(KeyCode::D) {
             if keyboard_input.pressed(KeyCode::A) {
                 player.base_sprite_offset = SPRITE_INDEX_LEFT;
-                player.velocity.0 = -1;
+                player.direction -= Vec3::X;
             } else {
                 player.base_sprite_offset = SPRITE_INDEX_RIGHT;
-                player.velocity.0 = 1;
+                player.direction += Vec3::X;
             }
         }
 
@@ -61,10 +71,10 @@ fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&
         if keyboard_input.pressed(KeyCode::S) ^ keyboard_input.pressed(KeyCode::W) {
             if keyboard_input.pressed(KeyCode::S) {
                 player.base_sprite_offset = SPRITE_INDEX_DOWN;
-                player.velocity.1 = -1;
+                player.direction -= Vec3::Y;
             } else {
                 player.base_sprite_offset = SPRITE_INDEX_UP;
-                player.velocity.1 = 1;
+                player.direction += Vec3::Y;
             }
         }
 
@@ -80,14 +90,48 @@ fn animate_sprite_system(
         &mut Timer,
         &mut TextureAtlasSprite,
         &Handle<TextureAtlas>,
+        &mut Transform,
         &mut Player,
     )>,
+    mut game_camera_query: Query<&mut GameCamera>,
 ) {
-    for (mut timer, mut sprite, _texture_atlas_handle, mut player) in query.iter_mut() {
+    for (mut timer, mut sprite, _texture_atlas_handle, mut transform, mut player) in
+        query.iter_mut()
+    {
+        // update sprite frame
         timer.tick(time.delta());
         if timer.finished() {
             player.step();
             sprite.index = player.sprite_offset();
+        }
+
+        // move player
+        player.position = player.position
+            + player.direction * WALKING_SPEED * time.delta().as_nanos() as f32 / 1_000_000_000.0;
+
+        // move camera to follow player
+        for mut camera in game_camera_query.iter_mut() {
+            let horizonal_bound = crate::WINDOW_WIDTH / 2.0 - SPRITE_WIDTH / 2.0 * SPRITE_ZOOM;
+
+            if player.position.x - camera.position.x - horizonal_bound > 0.0 {
+                camera.position.x = player.position.x - horizonal_bound
+            }
+
+            if player.position.x - camera.position.x + horizonal_bound < 0.0 {
+                camera.position.x = player.position.x + horizonal_bound
+            }
+
+            let vertical_bound = crate::WINDOW_HEIGHT / 2.0 - SPRITE_HEIGHT / 2.0 * SPRITE_ZOOM;
+
+            if player.position.y - camera.position.y - vertical_bound > 0.0 {
+                camera.position.y = player.position.y - vertical_bound
+            }
+
+            if player.position.y - camera.position.y + vertical_bound < 0.0 {
+                camera.position.y = player.position.y + vertical_bound
+            }
+
+            transform.translation = player.position - camera.position;
         }
     }
 }
@@ -98,16 +142,22 @@ fn setup(
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
     let texture_handle = asset_server.load("textures/player.png");
-    let texture_atlas = TextureAtlas::from_grid(texture_handle, Vec2::new(16.0, 23.0), 16, 1);
+    let texture_atlas = TextureAtlas::from_grid(
+        texture_handle,
+        Vec2::new(SPRITE_WIDTH, SPRITE_HEIGHT),
+        16,
+        1,
+    );
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
+
     commands.spawn_bundle(OrthographicCameraBundle::new_2d());
 
     commands
         .spawn_bundle(SpriteSheetBundle {
             texture_atlas: texture_atlas_handle,
-            transform: Transform::from_scale(Vec3::splat(4.0)),
+            transform: Transform::from_scale(Vec3::splat(SPRITE_ZOOM)),
             ..Default::default()
         })
-        .insert(Timer::from_seconds(0.1, true))
+        .insert(Timer::from_seconds(STEP_DURATION_SECONDS, true))
         .insert(Player::default());
 }
