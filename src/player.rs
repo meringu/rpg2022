@@ -1,7 +1,8 @@
 use crate::game_camera::GameCamera;
 use bevy::prelude::*;
 
-const SPRITE_WIDTH: f32 = 16.0;
+const SPRITE_SHEET: &str = "textures/player.png";
+const SPRITE_WIDTH: f32 = 12.0;
 const SPRITE_HEIGHT: f32 = 23.0;
 const SPRITE_ZOOM: f32 = 4.0;
 
@@ -142,7 +143,7 @@ fn setup(
     asset_server: Res<AssetServer>,
     mut texture_atlases: ResMut<Assets<TextureAtlas>>,
 ) {
-    let texture_handle = asset_server.load("textures/player.png");
+    let texture_handle = asset_server.load(SPRITE_SHEET);
     let texture_atlas = TextureAtlas::from_grid(
         texture_handle,
         Vec2::new(SPRITE_WIDTH, SPRITE_HEIGHT),
