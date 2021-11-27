@@ -1,23 +1,12 @@
 on: [push, pull_request]
 name: Clippy check
 jobs:
-  clippy_check_wasm:
+  clippy_check:
     runs-on: ubuntu-latest
     steps:
       - uses: actions/checkout@v2
       - run: rustup show
       - uses: actions-rs/clippy-check@v1
         with:
-          name: Clippy check wasm32-unknown-unknown
-          args: --target wasm32-unknown-unknown
-          token: ${{ secrets.GITHUB_TOKEN }}
-  clippy_check_linux:
-    runs-on: ubuntu-latest
-    steps:
-      - uses: actions/checkout@v2
-      - run: rustup show
-      - uses: actions-rs/clippy-check@v1
-        with:
-          name: Clippy check x86_64-unknown-linux-gnu
-          args: --target x86_64-unknown-linux-gnu
+          args: --all-targets
           token: ${{ secrets.GITHUB_TOKEN }}
