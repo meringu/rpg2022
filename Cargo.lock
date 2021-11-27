@@ -1417,6 +1417,16 @@ source = "registry+https://github.com/rust-lang/crates.io-index"
 checksum = "3abb554f8ee44336b72d522e0a7fe86a29e09f839a36022fa869a7dfe941a54b"
 
 [[package]]
+name = "gloo-events"
+version = "0.1.1"
+source = "registry+https://github.com/rust-lang/crates.io-index"
+checksum = "088514ec8ef284891c762c88a66b639b3a730134714692ee31829765c5bc814f"
+dependencies = [
+ "wasm-bindgen",
+ "web-sys",
+]
+
+[[package]]
 name = "glow"
 version = "0.7.2"
 source = "registry+https://github.com/rust-lang/crates.io-index"
@@ -2381,8 +2391,10 @@ version = "0.1.0"
 dependencies = [
  "bevy",
  "bevy_webgl2",
+ "gloo-events",
  "rand",
  "wasm-bindgen",
+ "web-sys",
 ]
 
 [[package]]
