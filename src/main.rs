@@ -1,6 +1,8 @@
 use bevy::prelude::*;
 
-use rpg::*;
+pub mod game_camera;
+pub mod map;
+pub mod player;
 
 fn main() {
     let mut app = App::build();
@@ -8,9 +10,6 @@ fn main() {
     app.insert_resource(WindowDescriptor {
         #[cfg(target_arch = "wasm32")]
         canvas: Some("#rpg-canvas".to_string()),
-        width: WINDOW_WIDTH,
-        height: WINDOW_HEIGHT,
-        resizable: false,
         ..Default::default()
     });
 

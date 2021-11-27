@@ -10,7 +10,7 @@ const SPRITE_INDEX_LEFT: u32 = SPRITE_FRAMES;
 const SPRITE_INDEX_RIGHT: u32 = 2 * SPRITE_FRAMES;
 const SPRITE_INDEX_UP: u32 = 3 * SPRITE_FRAMES;
 
-const WALKING_SPEED: f32 = 200.0;
+const WALKING_SPEED: f32 = 75.0;
 const STEP_DURATION_SECONDS: f32 = 0.15;
 
 #[derive(Default)]
@@ -124,7 +124,6 @@ fn setup(
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     let transform = Transform {
         translation: Vec3::Z * 100.0,
-        scale: Vec3::splat(crate::SPRITE_ZOOM),
         ..Default::default()
     };
 

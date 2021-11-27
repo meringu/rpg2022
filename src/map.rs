@@ -28,16 +28,14 @@ fn setup(
 
     for x in 0..MAP_WIDTH {
         for y in 0..MAP_HEIGHT {
-            let translation = Vec3::new(
+            let position = Vec3::new(
                 x as f32 - MAP_WIDTH as f32 / 2.0,
                 y as f32 - MAP_HEIGHT as f32 / 2.0,
                 0.0,
-            ) * SPRITE_SIZE
-                * crate::SPRITE_ZOOM
-                + (Vec3::X + Vec3::Y) * crate::SPRITE_ZOOM * SPRITE_SIZE / 2.0;
+            );
+
             let transform = Transform {
-                translation,
-                scale: Vec3::splat(crate::SPRITE_ZOOM),
+                translation: position * SPRITE_SIZE + (Vec3::X + Vec3::Y) * SPRITE_SIZE / 2.0,
                 ..Default::default()
             };
 
