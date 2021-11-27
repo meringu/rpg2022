@@ -1,10 +1,8 @@
-use crate::game_camera::GameCamera;
 use bevy::prelude::*;
 
 const SPRITE_SHEET: &str = "textures/player.png";
-const SPRITE_WIDTH: f32 = 12.0;
-const SPRITE_HEIGHT: f32 = 23.0;
-const CAMERA_PADDING: f32 = 32.0;
+pub const SPRITE_WIDTH: f32 = 12.0;
+pub const SPRITE_HEIGHT: f32 = 23.0;
 
 const SPRITE_FRAMES: u32 = 4;
 const SPRITE_INDEX_DOWN: u32 = 0;
@@ -12,7 +10,7 @@ const SPRITE_INDEX_LEFT: u32 = SPRITE_FRAMES;
 const SPRITE_INDEX_RIGHT: u32 = 2 * SPRITE_FRAMES;
 const SPRITE_INDEX_UP: u32 = 3 * SPRITE_FRAMES;
 
-const WALKING_SPEED: f32 = 150.0;
+const WALKING_SPEED: f32 = 350.0;
 const STEP_DURATION_SECONDS: f32 = 0.15;
 
 #[derive(Default)]
@@ -48,8 +46,7 @@ impl Plugin for PlayerPlugin {
     fn build(&self, app: &mut AppBuilder) {
         app.add_startup_system(setup.system())
             .add_system(keyboard_input_system.system())
-            .add_system(animate_sprite_system.system())
-            .add_system_to_stage(CoreStage::PostUpdate, camera_tracking.system());
+            .add_system(animate_sprite_system.system());
     }
 }
 
@@ -81,44 +78,6 @@ fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&
 
         if !player.is_moving() {
             player.step_sprite_offset = 0;
-        }
-    }
-}
-
-#[allow(clippy::type_complexity)]
-fn camera_tracking(
-    mut query_set: QuerySet<(
-        Query<(&Transform, &Player)>,
-        Query<(&GameCamera, &mut Transform)>,
-    )>,
-) {
-    let mut pos = Vec3::ZERO;
-
-    for (transform, _player) in query_set.q0().iter() {
-        pos = transform.translation;
-    }
-    // move camera to follow player
-    for (_camera, mut cam) in query_set.q1_mut().iter_mut() {
-        let horizonal_bound =
-            crate::WINDOW_WIDTH / 2.0 - (SPRITE_WIDTH / 2.0 + CAMERA_PADDING) * crate::SPRITE_ZOOM;
-
-        if pos.x - cam.translation.x - horizonal_bound > 0.0 {
-            cam.translation.x = pos.x - horizonal_bound
-        }
-
-        if pos.x - cam.translation.x + horizonal_bound < 0.0 {
-            cam.translation.x = pos.x + horizonal_bound
-        }
-
-        let vertical_bound = crate::WINDOW_HEIGHT / 2.0
-            - (SPRITE_HEIGHT / 2.0 + CAMERA_PADDING) * crate::SPRITE_ZOOM;
-
-        if pos.y - cam.translation.y - vertical_bound > 0.0 {
-            cam.translation.y = pos.y - vertical_bound
-        }
-
-        if pos.y - cam.translation.y + vertical_bound < 0.0 {
-            cam.translation.y = pos.y + vertical_bound
         }
     }
 }
