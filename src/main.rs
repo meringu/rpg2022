@@ -6,6 +6,10 @@ pub mod game_camera;
 pub mod map;
 pub mod player;
 
+pub fn z_from_y(y: f32, sprite_height: f32) -> f32 {
+    -(y - sprite_height / 2.0) / 100.0 + 10.0
+}
+
 fn main() {
     let mut app = App::build();
 

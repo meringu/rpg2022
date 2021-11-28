@@ -1,3 +1,4 @@
+use crate::map;
 use bevy::prelude::*;
 
 const SPRITE_SHEET: &str = "textures/player.png";
@@ -203,6 +204,7 @@ fn animate_sprite_system(
         let delta =
             player.direction * WALKING_SPEED * time.delta().as_nanos() as f32 / 1_000_000_000.0;
         transform.translation += delta;
+        transform.translation.z = crate::z_from_y(transform.translation.y, SPRITE_HEIGHT);
     }
 }
 
@@ -220,7 +222,7 @@ fn setup(
     );
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     let transform = Transform {
-        translation: Vec3::Z * 100.0,
+        translation: init_translation(),
         ..Default::default()
     };
 
@@ -232,4 +234,13 @@ fn setup(
         })
         .insert(Timer::from_seconds(STEP_DURATION_SECONDS, true))
         .insert(Player::default());
+}
+
+pub fn init_translation() -> Vec3 {
+    let y = map::MAP_HEIGHT as f32 / 2.0 * map::SPRITE_SIZE;
+    Vec3::new(
+        map::MAP_WIDTH as f32 / 2.0 * map::SPRITE_SIZE,
+        y,
+        crate::z_from_y(y, SPRITE_HEIGHT),
+    )
 }

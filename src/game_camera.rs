@@ -59,12 +59,12 @@ fn position_camera(
                 window.width() / 2.0 - (player::SPRITE_WIDTH / 2.0 + CAMERA_PADDING) * scale;
 
             // clip right
-            if pos.x * scale - cam.translation.x * scale - horizonal_bound > 0.0 {
+            if (pos.x - cam.translation.x) * scale > horizonal_bound {
                 cam.translation.x = pos.x - horizonal_bound / scale;
             }
 
             // clip left
-            if pos.x * scale - cam.translation.x * scale + horizonal_bound < 0.0 {
+            if (pos.x - cam.translation.x) * scale < -horizonal_bound {
                 cam.translation.x = pos.x + horizonal_bound / scale;
             }
 
@@ -72,45 +72,46 @@ fn position_camera(
                 window.height() / 2.0 - (player::SPRITE_HEIGHT / 2.0 + CAMERA_PADDING) * scale;
 
             // clip top
-            if pos.y * scale - cam.translation.y * scale - vertical_bound > 0.0 {
+            if (pos.y - cam.translation.y) * scale > vertical_bound {
                 cam.translation.y = pos.y - vertical_bound / scale;
             }
 
             // clip bottom
-            if pos.y * scale - cam.translation.y * scale + vertical_bound < 0.0 {
+            if (pos.y - cam.translation.y) * scale < -vertical_bound {
                 cam.translation.y = pos.y + vertical_bound / scale;
             }
 
             // move camera if map out of bounds
-            let map_half_width = map::MAP_WIDTH as f32 * map::SPRITE_SIZE / 2.0;
-            let win_half_width = window.width() / 2.0 / scale;
-
+            let map_width = map::MAP_WIDTH as f32 * map::SPRITE_SIZE;
+            let window_half_width = window.width() / scale / 2.0;
             // clip right
-            if map_half_width < cam.translation.x + win_half_width {
-                cam.translation.x = map_half_width - win_half_width;
+            if cam.translation.x + window_half_width > map_width {
+                cam.translation.x = map_width - window_half_width;
             }
             // clip left
-            if -map_half_width > cam.translation.x - win_half_width {
-                cam.translation.x = -map_half_width + win_half_width;
+            if cam.translation.x < window_half_width {
+                cam.translation.x = window_half_width;
             }
 
-            let map_half_height = map::MAP_HEIGHT as f32 * map::SPRITE_SIZE / 2.0;
-            let win_half_height = window.height() / 2.0 / scale;
-
-            // clip bottom
-            if -map_half_height > cam.translation.y - win_half_height {
-                cam.translation.y = -map_half_height + win_half_height;
-            }
+            let map_height = map::MAP_HEIGHT as f32 * map::SPRITE_SIZE;
+            let window_half_height = window.height() / scale / 2.0;
             // clip top
-            if map_half_height < cam.translation.y + win_half_height {
-                cam.translation.y = map_half_height - win_half_height;
+            if cam.translation.y + window_half_height > map_height {
+                cam.translation.y = map_height - window_half_height;
+            }
+            // clip bottom
+            if cam.translation.y < window_half_height {
+                cam.translation.y = window_half_height;
             }
         }
     }
 }
 
 fn setup(mut commands: Commands) {
-    commands
-        .spawn_bundle(OrthographicCameraBundle::new_2d())
-        .insert(GameCamera::default());
+    let mut cam = OrthographicCameraBundle::new_2d();
+    let player_pos = player::init_translation();
+    cam.transform.translation.x = player_pos.x;
+    cam.transform.translation.y = player_pos.y;
+
+    commands.spawn_bundle(cam).insert(GameCamera::default());
 }
