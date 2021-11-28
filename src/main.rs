@@ -2,6 +2,7 @@ use bevy::prelude::*;
 
 pub mod game_camera;
 pub mod map;
+pub mod music;
 pub mod player;
 pub mod window;
 
@@ -17,8 +18,10 @@ fn main() {
     app.add_plugin(bevy_webgl2::WebGL2Plugin)
         .add_plugin(crate::window::WebFullscreenPlugin);
 
-    app.add_plugin(game_camera::GameCameraPlugin)
+    app.add_plugin(bevy_kira_audio::AudioPlugin)
+        .add_plugin(game_camera::GameCameraPlugin)
         .add_plugin(map::MapPlugin)
+        .add_plugin(music::MusicPlugin)
         .add_plugin(player::PlayerPlugin)
         .run();
 }
