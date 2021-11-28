@@ -59,10 +59,9 @@ fn setup(
         .insert(Timer::from_seconds(STEP_DURATION_SECONDS, true))
         .insert(Player::default())
         .insert(Velocity::default())
-        .insert(ControlMode::default())
         .insert(FrameBase::default())
         .insert(FrameStep::default())
-        .insert(control::Control::default());
+        .insert(Control::default());
 }
 
 pub fn init_position() -> Vec3 {

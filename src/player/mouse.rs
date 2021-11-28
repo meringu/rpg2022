@@ -8,7 +8,6 @@ pub fn input(
     buttons: Res<Input<MouseButton>>,
     mut query: Query<(&mut Velocity, &mut FrameBase, &mut Control)>,
 ) {
-    println!("foo");
     if let Some(window) = windows.get_primary() {
         for (mut velocity, mut frame, mut control) in query.iter_mut() {
             // just clicked
