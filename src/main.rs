@@ -19,9 +19,9 @@ fn main() {
         .add_plugin(crate::window::WebFullscreenPlugin);
 
     app.add_plugin(bevy_kira_audio::AudioPlugin)
+        .add_plugin(music::MusicPlugin)
         .add_plugin(game_camera::GameCameraPlugin)
         .add_plugin(map::MapPlugin)
-        .add_plugin(music::MusicPlugin)
         .add_plugin(player::PlayerPlugin)
         .run();
 }
