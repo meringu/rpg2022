@@ -5,9 +5,34 @@ pub const MAP_WIDTH: usize = 32;
 pub const MAP_HEIGHT: usize = 32;
 pub const SPRITE_SIZE: f32 = 32.0;
 
-const NUM_OAK_TREES: usize = 20;
-const SPRITE_OAK_TREE: &str = "textures/oak_tree.png";
-const OAK_TREE_HEIGHT: f32 = 111.0;
+const OBJECTS: &[ObjectDetails] = &[
+    ObjectDetails {
+        count: 10,
+        sprite_path: "textures/house.png",
+        sprite_height: 55.0,
+    },
+    ObjectDetails {
+        count: 7,
+        sprite_path: "textures/teepee.png",
+        sprite_height: 61.0,
+    },
+    ObjectDetails {
+        count: 1,
+        sprite_path: "textures/double_teepee.png",
+        sprite_height: 61.0,
+    },
+    ObjectDetails {
+        count: 20,
+        sprite_path: "textures/oak_tree.png",
+        sprite_height: 111.0,
+    },
+];
+
+struct ObjectDetails<'a> {
+    count: usize,
+    sprite_path: &'a str,
+    sprite_height: f32,
+}
 
 const SPRITE_GRASS: &str = "textures/tiles/grass.png";
 const SPRITE_TUFT: &str = "textures/tiles/tuft.png";
@@ -27,19 +52,21 @@ fn setup(
 ) {
     let mut rng = rand::thread_rng();
 
-    let oak_tree_handle = materials.add(asset_server.load(SPRITE_OAK_TREE).into());
-    for _ in 0..NUM_OAK_TREES {
-        let x = rng.gen_range(-(MAP_WIDTH as f32)..MAP_WIDTH as f32) / 2.0 * SPRITE_SIZE;
-        let y = rng.gen_range(-(MAP_HEIGHT as f32)..MAP_HEIGHT as f32) / 2.0 * SPRITE_SIZE;
+    for object in OBJECTS.iter() {
+        let handle = materials.add(asset_server.load(object.sprite_path).into());
+        for _ in 0..object.count {
+            let x = rng.gen_range(0..MAP_WIDTH) as f32 * SPRITE_SIZE;
+            let y = rng.gen_range(0..MAP_HEIGHT) as f32 * SPRITE_SIZE;
 
-        commands.spawn().insert_bundle(SpriteBundle {
-            material: oak_tree_handle.clone(),
-            transform: Transform {
-                translation: Vec3::new(x, y, crate::z_from_y(y, OAK_TREE_HEIGHT)),
+            commands.spawn().insert_bundle(SpriteBundle {
+                material: handle.clone(),
+                transform: Transform {
+                    translation: Vec3::new(x, y, crate::z_from_y(y, object.sprite_height)),
+                    ..Default::default()
+                },
                 ..Default::default()
-            },
-            ..Default::default()
-        });
+            });
+        }
     }
 
     let grass_handle = materials.add(asset_server.load(SPRITE_GRASS).into());

@@ -6,7 +6,7 @@ pub mod player;
 pub mod window;
 
 pub fn z_from_y(y: f32, sprite_height: f32) -> f32 {
-    -(y - sprite_height / 2.0) / 100.0 + 10.0
+    -(y - sprite_height / 2.0) / 1000.0 + 10.0
 }
 
 fn main() {
