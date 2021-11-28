@@ -107,6 +107,9 @@ fn keyboard_input_system(keyboard_input: Res<Input<KeyCode>>, mut query: Query<&
         if player.control_mode == ControlMode::Keyboard {
             if dir == Vec3::ZERO {
                 player.control_mode = ControlMode::None;
+            } else {
+                // cap diagonal at walk speed
+                dir /= dir.length();
             }
             player.direction = dir;
         }
