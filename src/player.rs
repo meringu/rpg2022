@@ -215,8 +215,8 @@ fn setup(
     let texture_atlas = TextureAtlas::from_grid(
         texture_handle,
         Vec2::new(SPRITE_WIDTH, SPRITE_HEIGHT),
-        16,
-        1,
+        SPRITE_FRAMES as usize,
+        4,
     );
     let texture_atlas_handle = texture_atlases.add(texture_atlas);
     let transform = Transform {
