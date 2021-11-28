@@ -6,7 +6,7 @@ const CAMERA_PADDING: f32 = 32.0;
 const DIAGONAL_PIXELS: f32 = 400.0;
 
 #[derive(Default)]
-pub struct GameCamera;
+struct GameCamera;
 
 pub struct GameCameraPlugin;
 
@@ -15,6 +15,22 @@ impl Plugin for GameCameraPlugin {
         app.add_startup_system(setup.system())
             .add_system_to_stage(CoreStage::PostUpdate, position_camera.system());
     }
+}
+
+fn calculate_zoom(window: &Window) -> f32 {
+    let mut scale = (window.height() * window.height() + window.width() * window.width()).sqrt()
+        / DIAGONAL_PIXELS;
+
+    // Scale up in multiples of 1 unless the window is very small
+    if scale > 2.0 {
+        scale = scale.floor();
+    } else if scale > 1.5 {
+        scale = 1.5;
+    } else if scale > 1.0 {
+        scale = 1.0;
+    }
+
+    scale
 }
 
 #[allow(clippy::type_complexity)]
@@ -26,18 +42,7 @@ fn position_camera(
     )>,
 ) {
     if let Some(window) = windows.get_primary() {
-        let mut scale = (window.height() * window.height() + window.width() * window.width())
-            .sqrt()
-            / DIAGONAL_PIXELS;
-
-        // Scale up in multiples of 1 unless the window is very small
-        if scale > 2.0 {
-            scale = scale.floor();
-        } else if scale > 1.5 {
-            scale = 1.5;
-        } else if scale > 1.0 {
-            scale = 1.0;
-        }
+        let scale = calculate_zoom(window);
 
         // player position
         let mut pos = Vec3::ZERO;
