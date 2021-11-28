@@ -5,7 +5,9 @@ edition = "2021"
 
 [dependencies]
 
+bevy_asset_ron = "0.2"
 rand = "0.8.4"
+serde = "1"
 
 # Native
 [target.'cfg(not(target_arch = "wasm32"))'.dependencies]

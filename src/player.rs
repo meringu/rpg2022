@@ -2,8 +2,8 @@ use crate::map;
 use bevy::prelude::*;
 
 const SPRITE_SHEET: &str = "textures/player.png";
-pub const SPRITE_WIDTH: f32 = 12.0;
-pub const SPRITE_HEIGHT: f32 = 23.0;
+pub const SPRITE_WIDTH: f32 = 14.0;
+pub const SPRITE_HEIGHT: f32 = 25.0;
 
 const SPRITE_FRAMES: u32 = 4;
 const SPRITE_INDEX_DOWN: u32 = 0;

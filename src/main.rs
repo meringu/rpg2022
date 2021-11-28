@@ -17,9 +17,8 @@ fn main() {
     app.add_plugin(bevy_webgl2::WebGL2Plugin)
         .add_plugin(crate::window::WebFullscreenPlugin);
 
-    app.add_plugin(game_camera::GameCameraPlugin);
-    app.add_plugin(map::MapPlugin);
-    app.add_plugin(player::PlayerPlugin);
-
-    app.run();
+    app.add_plugin(game_camera::GameCameraPlugin)
+        .add_plugin(map::MapPlugin)
+        .add_plugin(player::PlayerPlugin)
+        .run();
 }
