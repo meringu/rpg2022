@@ -109,7 +109,7 @@ fn position_camera(
 
 fn setup(mut commands: Commands) {
     let mut cam = OrthographicCameraBundle::new_2d();
-    let player_pos = player::init_translation();
+    let player_pos = player::init_position();
     cam.transform.translation.x = player_pos.x;
     cam.transform.translation.y = player_pos.y;
 
