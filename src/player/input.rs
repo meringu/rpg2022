@@ -22,9 +22,14 @@ pub fn input(
         for (mut click_start, mut rigid_body_velocity) in query.iter_mut() {
             let mut v = Vec2::ZERO;
 
+            let u = keyboard_input.pressed(KeyCode::W) || keyboard_input.pressed(KeyCode::Up);
+            let d = keyboard_input.pressed(KeyCode::S) || keyboard_input.pressed(KeyCode::Down);
+            let l = keyboard_input.pressed(KeyCode::A) || keyboard_input.pressed(KeyCode::Left);
+            let r = keyboard_input.pressed(KeyCode::D) || keyboard_input.pressed(KeyCode::Right);
+
             // if keyboard moving horizonally
-            if keyboard_input.pressed(KeyCode::A) ^ keyboard_input.pressed(KeyCode::D) {
-                if keyboard_input.pressed(KeyCode::A) {
+            if l ^ r {
+                if l {
                     v -= Vec2::X;
                 } else {
                     v += Vec2::X;
@@ -32,8 +37,8 @@ pub fn input(
             }
 
             // if keyboard moving vertically
-            if keyboard_input.pressed(KeyCode::S) ^ keyboard_input.pressed(KeyCode::W) {
-                if keyboard_input.pressed(KeyCode::S) {
+            if u ^ d {
+                if d {
                     v -= Vec2::Y;
                 } else {
                     v += Vec2::Y;

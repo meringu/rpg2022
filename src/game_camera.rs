@@ -2,7 +2,7 @@ use crate::map;
 use crate::player;
 use bevy::prelude::*;
 
-const CAMERA_PADDING: f32 = 32.0;
+const CAMERA_PADDING: f32 = 48.0;
 const DIAGONAL_PIXELS: f32 = 400.0;
 
 #[derive(Default)]
