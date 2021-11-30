@@ -82,7 +82,7 @@ fn position_camera(
             }
 
             // move camera if map out of bounds
-            let map_width = map::MAP_WIDTH as f32 * map::SPRITE_SIZE;
+            let map_width = map::MAP_WIDTH as f32;
             let window_half_width = window.width() / scale / 2.0;
             // clip right
             if cam.translation.x + window_half_width > map_width {
@@ -93,7 +93,7 @@ fn position_camera(
                 cam.translation.x = window_half_width;
             }
 
-            let map_height = map::MAP_HEIGHT as f32 * map::SPRITE_SIZE;
+            let map_height = map::MAP_HEIGHT as f32;
             let window_half_height = window.height() / scale / 2.0;
             // clip top
             if cam.translation.y + window_half_height > map_height {
