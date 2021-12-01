@@ -109,7 +109,7 @@ fn position_camera(
 
 fn setup(mut commands: Commands) {
     let mut cam = OrthographicCameraBundle::new_2d();
-    let player_pos = player::init_position();
+    let player_pos = Vec3::new(map::MAP_WIDTH / 2.0, map::MAP_HEIGHT / 2.0, 0.0);
     cam.transform.translation.x = player_pos.x;
     cam.transform.translation.y = player_pos.y;
 

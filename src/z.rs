@@ -14,6 +14,6 @@ impl Plugin for ZPlugin {
 fn system(mut query: Query<(&mut Transform, &mut GlobalTransform, &ZSync)>) {
     for (mut transform, global, z) in query.iter_mut() {
         transform.translation.z =
-            -(global.translation.y - transform.translation.y - z.0) / 1000.0 + 10.0;
+            (transform.translation.y - global.translation.y - z.0) / 1000.0 + 10.0;
     }
 }
