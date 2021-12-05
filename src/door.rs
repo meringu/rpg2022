@@ -32,7 +32,6 @@ fn display_events(mut door_events: EventReader<DoorEvents>) {
     }
 }
 
-// #[allow(clippy::type_complexity)]
 fn system(
     narrow_phase: Res<NarrowPhase>,
     player_query: Query<Entity, With<Player>>,
