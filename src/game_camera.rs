@@ -17,9 +17,8 @@ impl Plugin for GameCameraPlugin {
     }
 }
 
-fn calculate_zoom(window: &Window) -> f32 {
-    let mut scale = (window.height() * window.height() + window.width() * window.width()).sqrt()
-        / DIAGONAL_PIXELS;
+fn calculate_zoom(x: f32, y: f32) -> f32 {
+    let mut scale = (x * x + y * y).sqrt() / DIAGONAL_PIXELS;
 
     // Scale up in multiples of 1 unless the window is very small
     if scale > 2.0 {
@@ -42,7 +41,7 @@ fn position_camera(
     )>,
 ) {
     if let Some(window) = windows.get_primary() {
-        let scale = calculate_zoom(window);
+        let scale = calculate_zoom(window.width(), window.height());
 
         // player position
         let mut pos = Vec3::ZERO;

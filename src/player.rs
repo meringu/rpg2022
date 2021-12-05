@@ -4,7 +4,7 @@ use bevy::prelude::*;
 use bevy_rapier2d::prelude::*;
 
 const MOUSE_WALKING_SENSITIVITY: f32 = 15.0;
-const WALKING_SPEED: f32 = 175.0;
+const WALKING_SPEED: f32 = 75.0;
 
 const STEPS: u32 = 4;
 const OFFSET_DOWN: u32 = 0;
@@ -179,27 +179,27 @@ pub fn system(
                         if velocity.length() > 0.0 {
                             step_offset += 1;
                             step_offset %= STEPS;
-
-                            // reduce jitter by calculating the new direction only when taking a step
-                            if velocity.x.abs() > velocity.y.abs() {
-                                // moving horizontally
-                                if velocity.x > 0.0 {
-                                    base_offset = OFFSET_RIGHT;
-                                } else {
-                                    base_offset = OFFSET_LEFT;
-                                }
-                            } else {
-                                // moving vertically
-                                if velocity.y > 0.0 {
-                                    base_offset = OFFSET_UP;
-                                } else {
-                                    base_offset = OFFSET_DOWN;
-                                }
-                            }
                         } else {
                             step_offset = 0;
                         }
                     }
+
+                    if velocity.x.abs() > velocity.y.abs() {
+                        // moving horizontally
+                        if velocity.x > 0.0 {
+                            base_offset = OFFSET_RIGHT;
+                        } else if velocity.x < 0.0 {
+                            base_offset = OFFSET_LEFT;
+                        }
+                    } else {
+                        // moving vertically
+                        if velocity.y > 0.0 {
+                            base_offset = OFFSET_UP;
+                        } else if velocity.y < 0.0 {
+                            base_offset = OFFSET_DOWN;
+                        }
+                    }
+
                     sprite.index = base_offset + step_offset;
 
                     rigid_body_velocity.linvel = velocity.into();
